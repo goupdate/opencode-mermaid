@@ -36,6 +36,95 @@ No tool calls. No external browser. Just write ` ```mermaid ` and it renders.
 
 ---
 
+## Examples
+
+**Flowchart — CI/CD pipeline:**
+
+```mermaid
+graph LR
+  A[Push to GitHub] --> B[Run Tests]
+  B --> C{Tests Pass?}
+  C -->|Yes| D[Build Docker Image]
+  C -->|No| E[Notify Dev]
+  D --> F[Deploy to Staging]
+  F --> G[Run E2E Tests]
+  G --> H{All Green?}
+  H -->|Yes| I[Deploy to Prod]
+  H -->|No| E
+```
+
+**Sequence — OAuth 2.0 login flow:**
+
+```mermaid
+sequenceDiagram
+  participant U as User
+  participant A as App
+  participant P as Auth Provider
+  participant D as Database
+
+  U->>A: Click "Login"
+  A->>P: Redirect to OAuth
+  P->>U: Show consent screen
+  U->>P: Approve
+  P->>A: Return auth code
+  A->>P: Exchange code for tokens
+  P->>A: Access + Refresh token
+  A->>D: Store user session
+  A->>U: Logged in
+```
+
+**Class — data model:**
+
+```mermaid
+classDiagram
+  class User {
+    +uuid id
+    +string email
+    +string name
+    +login()
+    +logout()
+  }
+  class Order {
+    +uuid id
+    +decimal total
+    +string status
+    +cancel()
+  }
+  class Product {
+    +uuid id
+    +string name
+    +decimal price
+  }
+  User "1" --> "*" Order : places
+  Order "*" --> "*" Product : contains
+```
+
+**State — auth session lifecycle:**
+
+```mermaid
+stateDiagram-v2
+  [*] --> Guest
+  Guest --> LoggingIn : submit credentials
+  LoggingIn --> Authenticated : success
+  LoggingIn --> Error : failure
+  Error --> LoggingIn : retry
+  Authenticated --> Guest : logout
+  Authenticated --> Expired : token timeout
+  Expired --> LoggingIn : refresh
+```
+
+**ER — blog database schema:**
+
+```mermaid
+erDiagram
+  User ||--o{ Post : writes
+  Post ||--o{ Comment : has
+  User ||--o{ Comment : writes
+  Post }o--|| Category : belongs_to
+```
+
+---
+
 ## Supported diagram types
 
 | Type | Syntax | Status |
