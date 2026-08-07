@@ -1,10 +1,10 @@
 {
-  "name": "opencode-mermaid-inline",
+  "name": "@goupdate/opencode-mermaid",
   "version": "0.1.0",
   "description": "OpenCode plugin — render Mermaid diagrams inline in chat as SVG with collapsible source view",
   "type": "module",
-  "main": "index.ts",
-  "files": ["index.ts"],
+  "main": "dist/index.js",
+  "files": ["dist"],
   "keywords": ["opencode", "opencode-plugin", "mermaid", "diagram", "svg", "inline"],
   "license": "MIT",
   "repository": {
@@ -20,9 +20,12 @@
   "devDependencies": {
     "@opencode-ai/plugin": "1.2.26",
     "@types/bun": "latest",
+    "tsup": "^8.5.1",
     "typescript": "^5"
   },
   "scripts": {
+    "build": "tsup index.ts --format esm --out-dir dist --clean",
+    "prepublishOnly": "npm run build",
     "test": "bun test",
     "test:watch": "bun test --watch"
   }
