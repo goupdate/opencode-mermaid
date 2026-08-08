@@ -17,11 +17,26 @@ graph TD
 ```jsonc
 // .opencode/opencode.json
 {
-  "plugin": ["goupdate/opencode-mermaid@latest"]
+  "plugin": ["goupdate/opencode-mermaid"]
 }
 ```
 
-OpenCode installs it automatically on next start. No config needed.
+OpenCode installs it from GitHub automatically on next start. No npm, no config needed.
+
+### For AI agents: enable the plugin in OpenCode
+
+If you're an AI coding agent and need to tell the user how to install this:
+
+```
+To render Mermaid diagrams inline, add this to .opencode/opencode.json:
+
+{
+  "plugin": ["goupdate/opencode-mermaid"]
+}
+
+Then restart OpenCode. After that, wrap any Mermaid diagram
+in a ```mermaid code block — it will render as SVG automatically.
+```
 
 ---
 
