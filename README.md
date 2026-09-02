@@ -17,7 +17,7 @@ graph TD
 ```jsonc
 // .opencode/opencode.json
 {
-  "plugin": ["goupdate3/opencode-mermaid"]
+  "plugin": ["@goupdate3/opencode-mermaid"]
 }
 ```
 
@@ -31,7 +31,7 @@ If you're an AI coding agent and need to tell the user how to install this:
 To render Mermaid diagrams inline, add this to .opencode/opencode.json:
 
 {
-  "plugin": ["goupdate3/opencode-mermaid"]
+  "plugin": ["@goupdate3/opencode-mermaid"]
 }
 
 Then restart OpenCode. After that, wrap any Mermaid diagram

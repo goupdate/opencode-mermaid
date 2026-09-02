@@ -1,6 +1,6 @@
 ﻿{
   "name": "@goupdate3/opencode-mermaid",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "OpenCode plugin — render Mermaid diagrams inline in chat as SVG with collapsible source view",
   "type": "module",
   "main": "dist/index.js",
