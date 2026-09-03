@@ -104,7 +104,7 @@ export async function renderSingleBlock(code: string): Promise<string> {
  * Convert an SVG string to a markdown image with a base64 data URL.
  */
 export function svgToImage(svg: string): string {
-  const b64 = btoa(svg);
+  const b64 = Buffer.from(svg, "utf-8").toString("base64");
   const dataUrl = `data:image/svg+xml;base64,${b64}`;
 
   if (dataUrl.length > MAX_DATA_URL) {

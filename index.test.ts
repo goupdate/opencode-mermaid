@@ -20,7 +20,19 @@ describe("svgToImage", () => {
       "![Mermaid diagram](data:image/svg+xml;base64,".length,
       -1,
     );
-    const decoded = atob(b64);
+    const decoded = Buffer.from(b64, "base64").toString("utf-8");
+    expect(decoded).toBe(svg);
+  });
+
+  it("handles non-ASCII (Cyrillic) characters in the SVG", () => {
+    const svg = '<svg xmlns="http://www.w3.org/2000/svg">Клиент</svg>';
+    const result = svgToImage(svg);
+
+    const b64 = result.slice(
+      "![Mermaid diagram](data:image/svg+xml;base64,".length,
+      -1,
+    );
+    const decoded = Buffer.from(b64, "base64").toString("utf-8");
     expect(decoded).toBe(svg);
   });
 });
