@@ -18700,25 +18700,31 @@ async function renderMermaid(text, options = {}) {
 
 // index.ts
 var MERMAID_BLOCK_RE = /```mermaid\r?\n([\s\S]*?)```/g;
+var SYSTEM_PROMPT = [
+  "IMPORTANT Mermaid rendering instructions:",
+  "You have a render_mermaid tool available. Use it to display diagrams.",
+  "NEVER output raw ```mermaid code blocks in your response.",
+  "Instead, call the render_mermaid tool with the raw Mermaid source as the 'code' argument.",
+  "Example: render_mermaid({code: 'graph TD\\n  A --> B'})",
+  "Supported types: flowchart (graph TD/LR/RL/BT), sequenceDiagram,",
+  "classDiagram, stateDiagram-v2, erDiagram.",
+  "NOT supported: pie, gantt, mindmap, timeline, gitGraph.",
+  "The tool returns a rendered SVG diagram visible in chat."
+].join("\n");
 var MermaidInlinePlugin = async () => {
   return {
     "experimental.chat.system.transform": async (_input, output) => {
-      output.system.push(
-        'You can render Mermaid diagrams using the render_mermaid tool. Call render_mermaid with valid Mermaid.js source code. Supported: flowchart (graph TD/LR/RL/BT), sequenceDiagram, classDiagram, stateDiagram-v2, erDiagram. NOT supported: pie, gantt, mindmap, timeline, gitGraph \u2014 use flowchart instead. Example call: render_mermaid({code: "graph TD\\n  A[Client] --> B[Server]\\n  B --> C[(Database)]"})'
-      );
-    },
-    "experimental.text.complete": async (_input, output) => {
-      if (typeof output.text !== "string") return;
-      output.text = await renderAllBlocks(output.text);
+      output.system.push(SYSTEM_PROMPT);
     },
     tool: {
       render_mermaid: tool({
-        description: "Render a Mermaid.js diagram to an inline SVG image. Use this tool to display diagrams in chat. Input raw Mermaid source code with \\n for line breaks. Supported: flowchart, sequenceDiagram, classDiagram, stateDiagram-v2, erDiagram. Not supported: pie, gantt, mindmap, timeline, gitGraph.",
+        description: "Render a Mermaid.js diagram as an inline SVG image visible in chat. Call this tool INSTEAD of writing ```mermaid code blocks. The result is a rendered diagram the user can see.",
         args: {
-          code: tool.schema.string().describe("Raw Mermaid source code")
+          code: tool.schema.string().describe("Raw Mermaid.js source code with \\n for line breaks")
         },
         async execute(args) {
-          return renderSingleBlock(args.code);
+          const result = await renderSingleBlock(args.code);
+          return { title: "Mermaid diagram", output: result };
         }
       })
     }
@@ -18764,5 +18770,6 @@ export {
   index_default as default,
   renderAllBlocks,
   renderSingleBlock,
-  svgToImage
+  svgToImage,
+  tool
 };
