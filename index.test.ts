@@ -1,5 +1,6 @@
 import { describe, expect, it } from "bun:test";
 import { renderSingleBlock, renderAllBlocks, svgToImage } from "./index";
+import tool from "./tool";
 
 // ─── svgToImage ─────────────────────────────────────────────────────────────
 
@@ -265,7 +266,38 @@ describe("integration", () => {
 
     const detailsOpen = lines.findIndex((l) => l.trim() === "<details>");
     const detailsClose = lines.findIndex((l) => l.trim() === "</details>");
-    expect(detailsOpen).toBeGreaterThan(0);
-    expect(detailsClose).toBeGreaterThan(detailsOpen);
+expect(detailsOpen).toBeGreaterThan(0);
+  expect(detailsClose).toBeGreaterThan(detailsOpen);
+  });
+});
+
+// ─── Tool tests ──────────────────────────────────────────────────────────────
+
+describe("tool", () => {
+  it("has description and args", () => {
+    expect(tool.description).toBeString();
+    expect(tool.args).toHaveProperty("code");
+  });
+
+  it("execute returns a base64 data URL for valid mermaid", async () => {
+    const output = await tool.execute({ code: "graph TD\n  A --> B" }, {} as any);
+    expect(output).toStartWith("data:image/svg+xml;base64,");
+    // verify it's valid base64 by decoding
+    const b64 = output.slice("data:image/svg+xml;base64,".length);
+    const decoded = Buffer.from(b64, "base64").toString("utf-8");
+    expect(decoded).toStartWith("<svg");
+    expect(decoded).toContain("</svg>");
+  });
+
+  it("execute handles invalid mermaid gracefully", async () => {
+    const output = await tool.execute({ code: "not valid syntax !!!@@@" }, {} as any);
+    expect(output).toStartWith("Failed to render:");
+  });
+
+  it("produces a URL that works as a markdown image", async () => {
+    const url = await tool.execute({ code: "graph TD\n  A[Tester] --> B[Works]" }, {} as any);
+    expect(url).toStartWith("data:image/svg+xml;base64,");
+    const mdImage = `![diagram](${url})`;
+    expect(mdImage).toStartWith("![diagram](data:image/svg+xml;base64,");
   });
 });
