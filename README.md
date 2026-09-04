@@ -14,27 +14,47 @@ graph TD
 
 ## Install
 
+**Step 1 — install the package** into OpenCode's config directory:
+
+```bash
+# macOS / Linux
+cd ~/.config/opencode && npm install @goupdate3/opencode-mermaid
+
+# Windows
+cd %USERPROFILE%\.config\opencode && npm install @goupdate3/opencode-mermaid
+```
+
+**Step 2 — register the plugin** in your OpenCode config:
+
 ```jsonc
-// .opencode/opencode.json
+// ~/.config/opencode/opencode.json  (or %USERPROFILE%\.config\opencode\opencode.json)
 {
   "plugin": ["@goupdate3/opencode-mermaid"]
 }
 ```
 
-OpenCode installs it from GitHub automatically on next start. No npm, no config needed.
+**Step 3 — restart OpenCode.**
+
+That's it. Wrap any Mermaid diagram in a ` ```mermaid ` code block — it will render as SVG automatically.
+
+> **Why manual install?** OpenCode plugins are loaded from its own `node_modules`, not from your project. Auto-install on start is not supported — you must `npm install` into the config directory yourself.
 
 ### For AI agents: enable the plugin in OpenCode
 
 If you're an AI coding agent and need to tell the user how to install this:
 
 ```
-To render Mermaid diagrams inline, add this to .opencode/opencode.json:
+To render Mermaid diagrams inline, run this in your OpenCode config directory:
 
-{
-  "plugin": ["@goupdate3/opencode-mermaid"]
-}
+  npm install @goupdate3/opencode-mermaid
 
-Then restart OpenCode. After that, wrap any Mermaid diagram
+Then add this to opencode.json:
+
+  {
+    "plugin": ["@goupdate3/opencode-mermaid"]
+  }
+
+Restart OpenCode. After that, wrap any Mermaid diagram
 in a ```mermaid code block — it will render as SVG automatically.
 ```
 
